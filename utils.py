@@ -165,7 +165,7 @@ def exec_sim_cmd(scenario, folders):
     os.system(cmd)
 
 
-def gen_sumo_cfg(folders, k, routing_file):
+def gen_sumo_cfg(folders, routing_file,k):
     """
     Generate the sumo cfg file to execute the simulation
     """
@@ -186,21 +186,6 @@ def gen_sumo_cfg(folders, k, routing_file):
     ET.SubElement(parent, 'route-files').set('value', f'{routing_file}')
 
     edges_add = edges_path(folders)
-
-    """
-    if routing == 'dua':
-        add_list = [detector_output, vtype, edges_add]
-    elif routing == 'ma':
-        add_list = [TAZ, detector_output, vtype, edges_add]
-    elif routing == 'od2':
-        add_list = [TAZ, detector_output, vtype, edges_add]
-    elif routing == 'duai':
-        add_list = [detector_output, edges_add]
-    elif routing == 'rt':
-        add_list = [detector_output, vtype, edges_add]
-    """
-
-    add_list = []
 
     if routing == 'dua':add_list = [vtype]
     elif routing == 'ma':add_list = [TAZ, vtype]
@@ -242,7 +227,7 @@ def gen_sumo_cfg(folders, k, routing_file):
 
     # Update rou input
     parent = tree.find('time')
-    ET.SubElement(parent, 'end').set('value', f'{folders.simtime*3600}')
+    ET.SubElement(parent, 'end').set('value', f'{(folders.od2_end_hour+1)*3600}')
 
     # Write xml
     output_dir = os.path.join(folders.cfg, f'{curr_name}_{routing}_{k}.sumo.cfg')
@@ -250,6 +235,7 @@ def gen_sumo_cfg(folders, k, routing_file):
     # update cfg directory
     folders.sumo_cfg_dir = output_dir
     print(f'5. Generate the sumo.cfg file for simulate:\n   {output_dir}')
+    return output_dir
 
 
 def edges_path(folders):

@@ -7,6 +7,7 @@ from duaiterate import exec_DUAIterate
 # SUMO environment variable
 if 'SUMO_HOME' in os.environ:
     sumo_env_var = os.getenv('SUMO_HOME')
+    print(f"SUMO ENV {sumo_env_var}")
     sumo_exec = os.path.join(sumo_env_var, 'bin')
     sumo_tools = os.path.join(sumo_env_var, 'tools')
 else:
@@ -215,10 +216,23 @@ od2trips_file = gen_route_files(configurations, False) # gen_sumocfg_file = Fals
 configurations.network = os.path.join(configurations.map_folder,'osm.net.xml')
 configurations.duaiterations = 5 # number of duaiterations
 configurations.dua_network_update = 120 # seconds to update network status during duaiterate process
+configurations.reroute_probability = 0 #  reroute during simulation
+
+############ OUTPUTS #################
+configurations.sumo_var_emissions = False
+configurations.sumo_var_summary = True
+configurations.sumo_var_tripinfo = False
+
 
 # Execute duaiterate tool with OD2trips trips input
 route_file_last_iter = exec_DUAIterate(configurations, od2trips_file)
-# generate sumo cfg with the new rou file
-#gen_sumo_cfg(route_file_last_iter, k, config)  # last element reroute probability
+print("Duaiterate Route File: {route_file_last_iter}")
 
+# Generate sumo cfg with the new rou file
+print("6. Build DUAITERATE sumocfg file")
+duaiterate_sumcfg = gen_sumo_cfg(configurations, route_file_last_iter, 1)  # last element reroute probability
 
+# Execute Duaiterate Simulation
+cmd = f'sumo -c {duaiterate_sumcfg}'
+print("7. Execute DUAITERATE sumocfg simulation")
+os.system(cmd)

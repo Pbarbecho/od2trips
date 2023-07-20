@@ -119,14 +119,13 @@ def exec_DUAIterate(folders, via_trips):
     # edges = os.path.join(folders.edges, 'edges.add.xml')
 
     # duaiterate command
-    cmd = f'python {sumo_tool} --router-verbose --time-to-teleport 300 \
+    cmd = f'python {sumo_tool} --time-to-teleport 300 \
                                --time-to-teleport.highways 300 \
                                -+ {vtype} \
                                -a {net_update} \
                                -n {net_file} \
                                -t {via_trips} \
                                -l {iterations} \
-                               --router-verbose \
                                sumo--device.rerouting.probability {rr_prob} \
                                sumo--device.rerouting.period 60 \
                                sumo--device.rerouting.pre-period 60 \
@@ -153,7 +152,7 @@ def exec_DUAIterate(folders, via_trips):
 
     if fill_0_name != 0:
         name = name.join(['0' for i in range(fill_0_name)])
-    print('\nduarconfig:', name)
+    #print('\nduarconfig:', name)
 
     # get last iter rou name
     rou_file = ''
@@ -178,8 +177,9 @@ def exec_DUAIterate(folders, via_trips):
     os.system(cmd)
     cmd = f'cp {emission_liter} {folders.SUMO_tool}/outputs/{curr_name}_emission.xml'
     os.system(cmd)
-    return rou_file
     '''
+    return rou_file
+
 
 def duai(config, k):
     # Generate cfg files
