@@ -203,7 +203,7 @@ configurations.taz_file = os.path.join(configurations.map_folder, 'TAZ.xml')
 configurations.realtraffic = os.path.join(configurations.map_folder, 'traffic_file.csv') #file name. Notice that the traffic file is located inside the map folder
 
 # Set O/D parameters
-configurations.od2_end_hour = 3
+configurations.od2_end_hour = 24
 
 #Generate OD2TRIPS files with SUMO OD2Trips tool
 od2trips_file = gen_route_files(configurations, False) # gen_sumocfg_file = False
@@ -214,7 +214,7 @@ od2trips_file = gen_route_files(configurations, False) # gen_sumocfg_file = Fals
 #5. Generating O/D files for given TAZ:
 ####################################
 configurations.network = os.path.join(configurations.map_folder,'osm.net.xml')
-configurations.duaiterations = 5 # number of duaiterations
+configurations.duaiterations = 10 # number of duaiterations
 configurations.dua_network_update = 120 # seconds to update network status during duaiterate process
 configurations.reroute_probability = 0 #  reroute during simulation
 
@@ -223,16 +223,15 @@ configurations.sumo_var_emissions = False
 configurations.sumo_var_summary = True
 configurations.sumo_var_tripinfo = False
 
-
 # Execute duaiterate tool with OD2trips trips input
 route_file_last_iter = exec_DUAIterate(configurations, od2trips_file)
-print("Duaiterate Route File: {route_file_last_iter}")
+print(f"Duaiterate Route File: {route_file_last_iter}")
 
 # Generate sumo cfg with the new rou file
 print("6. Build DUAITERATE sumocfg file")
 duaiterate_sumcfg = gen_sumo_cfg(configurations, route_file_last_iter, 1)  # last element reroute probability
 
 # Execute Duaiterate Simulation
-cmd = f'sumo -c {duaiterate_sumcfg}'
-print("7. Execute DUAITERATE sumocfg simulation")
-os.system(cmd)
+#cmd = f'sumo -c {duaiterate_sumcfg}'
+#print("7. Execute DUAITERATE sumocfg simulation")
+#os.system(cmd)
